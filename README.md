@@ -1,1 +1,14 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Ay43B2Go)
+# LSM Frontend Development
+
+Projekt realizowany w ramach przedmiotu **Frontend Development**.
+Aplikacja typu **Single Page Application (SPA)** stworzona w technologii **React + Vite**.
+Celem projektu jest implementacja platformy edukacyjnej z podziałem na role użytkowników oraz podstawową strukturą kursu.
+
+## Status projektu
+
+Projekt jest w **fazie początkowej**. Aktualnie trwa konfiguracja środowiska, struktury aplikacji oraz podstawowego routingu.
+
+## Informacje
+
+Autor: **Vera Kibin**
+Repozytorium utworzone za pomocą GitHub Classroom na potrzeby zaliczenia projektu.

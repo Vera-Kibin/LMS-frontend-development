@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# MacOS
+.DS_Store
+
+# Testy / raporty
+coverage
