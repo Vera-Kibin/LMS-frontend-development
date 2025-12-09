@@ -1,8 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { zalogowanie } = useAuth();
+
   function wybor(role) {
+    zalogowanie(role);
     if (role === "student") navigate("/student");
     if (role === "instructor") navigate("/instructor");
     if (role === "admin") navigate("/admin");

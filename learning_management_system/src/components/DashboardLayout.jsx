@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function DashboardLayout({ title, children }) {
   const navigate = useNavigate();
+  const { wylogowanie } = useAuth();
   function wroc() {
+    wylogowanie();
     navigate("/login");
   }
 
@@ -10,7 +13,7 @@ export default function DashboardLayout({ title, children }) {
     <main className="layout">
       <header className="layout_header">
         <button className="layout_back" onClick={wroc}>
-          powrót
+          WYLOGOWANIE
         </button>
         <h1>{title}</h1>
       </header>
