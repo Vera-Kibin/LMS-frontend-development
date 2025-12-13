@@ -36,6 +36,30 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/courses"
+        element={
+          <ProtectedRoute allowedRoles={["student", "instructor", "admin"]}>
+            <CoursesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/courses/:courseId"
+        element={
+          <ProtectedRoute allowedRoles={["student", "instructor", "admin"]}>
+            <CoursePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/courses/:courseId/lessons/:lessonId"
+        element={
+          <ProtectedRoute allowedRoles={["student", "instructor", "admin"]}>
+            <LessonPage />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>

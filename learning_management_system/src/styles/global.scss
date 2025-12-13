@@ -51,6 +51,19 @@ body {
     background: #1e293b;
     box-shadow: 0 6px 18px rgba(30, 41, 59, 0.5);
     transform: translateY(-1px);
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    &:disabled:hover {
+      background: #334155;
+      box-shadow: none;
+      transform: none;
+    }
   }
 
   &:active {
@@ -229,4 +242,14 @@ body {
 .module-card--drag-over {
   outline: 2px dashed var(--accent);
   outline-offset: 3px;
+}
+
+.hint {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.12);
+  font-size: 14px;
+  opacity: 1;
 }
