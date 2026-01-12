@@ -1,4 +1,5 @@
 import SortableList from "./SortableList.jsx";
+import { Link } from "react-router-dom";
 
 export default function CourseStruktura({
   course,
@@ -27,12 +28,26 @@ export default function CourseStruktura({
               }
               className="lesson-list"
               itemClassName="lesson-item"
-              renderItem={(lesson) => (
-                <div className="lesson-row">
-                  {lesson.title}{" "}
-                  <span className="muted">({lesson.durationMinutes} min)</span>
-                </div>
-              )}
+              renderItem={(lesson) =>
+                editable ? (
+                  <div className="lesson-row">
+                    {lesson.title}{" "}
+                    <span className="muted">
+                      ({lesson.durationMinutes} min)
+                    </span>
+                  </div>
+                ) : (
+                  <Link
+                    className="lesson-row"
+                    to={`/courses/${course.id}/lessons/${lesson.id}`}
+                  >
+                    {lesson.title}{" "}
+                    <span className="muted">
+                      ({lesson.durationMinutes} min)
+                    </span>
+                  </Link>
+                )
+              }
             />
           </>
         )}

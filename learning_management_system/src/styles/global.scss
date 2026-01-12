@@ -302,3 +302,133 @@ body {
 .muted {
   opacity: 0.7;
 }
+// video
+
+.lesson-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.lesson-video video {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+.lesson-transcript {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  min-height: 420px;
+  position: relative;
+
+  padding: 0;
+
+  overflow: hidden;
+}
+
+.lesson-transcript h3 {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  margin: 0;
+  padding: 14px 16px;
+
+  background: rgba(17, 24, 39, 0.75);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+}
+
+.lesson-transcript::before,
+.lesson-transcript::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 28px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.lesson-transcript::before {
+  top: 48px;
+  background: linear-gradient(
+    to bottom,
+    rgba(17, 24, 39, 0.95),
+    rgba(17, 24, 39, 0)
+  );
+}
+
+.lesson-transcript::after {
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(17, 24, 39, 0.95),
+    rgba(17, 24, 39, 0)
+  );
+}
+.transcript-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  padding: 12px 14px 14px;
+  height: 420px;
+  overflow: auto;
+
+  overscroll-behavior: contain;
+  padding-right: 10px;
+
+  scrollbar-gutter: stable;
+}
+
+.transcript-line {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+
+  cursor: pointer;
+  opacity: 0.22;
+  font-size: 14px;
+  line-height: 1.45;
+
+  transition: opacity 0.15s, transform 0.15s, background 0.15s;
+}
+
+.transcript-line:hover {
+  opacity: 0.55;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.transcript-line.is-active {
+  opacity: 1;
+  font-size: 18px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(2px);
+}
+
+.transcript-line .text {
+  color: rgba(255, 255, 255, 0.92);
+  display: inline-block;
+  max-width: 52ch;
+}
+
+.transcript-line:not(.is-active) .text {
+  color: rgba(255, 255, 255, 0.55);
+}
+@media (max-width: 900px) {
+  .lesson-layout {
+    grid-template-columns: 1fr;
+  }
+  .transcript-list {
+    max-height: 260px;
+  }
+}

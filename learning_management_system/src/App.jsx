@@ -6,6 +6,7 @@ import AdminDashboard from "./pages/AdminDashboard.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import CoursesPage from "./pages/education/CoursesPage.jsx";
 import CoursePage from "./pages/education/CoursePage.jsx";
+import LessonPage from "./pages/education/LessonPage.jsx";
 
 function App() {
   return (
@@ -51,6 +52,14 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["student", "instructor", "admin"]}>
             <CoursePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/courses/:courseId/lessons/:lessonId"
+        element={
+          <ProtectedRoute allowedRoles={["student", "instructor", "admin"]}>
+            <LessonPage />
           </ProtectedRoute>
         }
       />
