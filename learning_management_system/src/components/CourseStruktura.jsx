@@ -4,6 +4,7 @@ export default function CourseStruktura({
   course,
   editable = false,
   onReorderModules,
+  onReorderLessons,
 }) {
   return (
     <div className="course-outline">
@@ -18,11 +19,21 @@ export default function CourseStruktura({
         renderItem={(module) => (
           <>
             <h3 className="module-card__title">{module.title}</h3>
-            <ul className="module-card__lessons">
-              {module.lessons.map((lesson) => (
-                <li key={lesson.id}>{lesson.title}</li>
-              ))}
-            </ul>
+            <SortableList
+              items={module.lessons}
+              editable={editable}
+              onReorder={(fromId, toId) =>
+                onReorderLessons(module.id, fromId, toId)
+              }
+              className="lesson-list"
+              itemClassName="lesson-item"
+              renderItem={(lesson) => (
+                <div className="lesson-row">
+                  {lesson.title}{" "}
+                  <span className="muted">({lesson.durationMinutes} min)</span>
+                </div>
+              )}
+            />
           </>
         )}
       />

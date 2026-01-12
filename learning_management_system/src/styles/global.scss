@@ -253,3 +253,52 @@ body {
   font-size: 14px;
   opacity: 1;
 }
+
+.courses-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.course-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
+  background: var(--bg-panel);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  border-color: var(--accent);
+}
+
+.course-card__title {
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+.lesson-item {
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  margin-top: 0.35rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+.lesson-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.muted {
+  opacity: 0.7;
+}
