@@ -302,6 +302,32 @@ body {
 .muted {
   opacity: 0.7;
 }
+
+// lesson
+
+.lesson-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 14px;
+  opacity: 0.9;
+
+  a {
+    color: rgba(255, 255, 255, 0.92);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  .muted {
+    opacity: 0.65;
+  }
+}
+.lesson-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
 // video
 
 .lesson-layout {
@@ -310,19 +336,36 @@ body {
   gap: 24px;
   align-items: stretch;
 }
+.lesson-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  padding: 16px;
+}
 
+.lesson-card__title {
+  margin: 0 0 10px;
+}
+.lesson-media .lesson-layout {
+  min-height: 420px;
+}
+.lesson-video {
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
+  height: 100%;
+}
 .lesson-video video {
   width: 100%;
-  height: auto;
-  border-radius: 14px;
+  height: 100%;
+  display: block;
+  object-fit: contain;
 }
 
 .lesson-transcript {
   background: rgba(255, 255, 255, 0.04);
   border-radius: 14px;
-  min-height: 420px;
   position: relative;
-
+  height: 100%;
   padding: 0;
 
   overflow: hidden;
@@ -430,5 +473,81 @@ body {
   }
   .transcript-list {
     max-height: 260px;
+  }
+}
+
+// quiz
+
+.quiz__card {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.quiz__answers {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.quiz__opt {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: transform 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.quiz__opt:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.quiz__opt input {
+  transform: scale(1.1);
+}
+
+.quiz__actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 0;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.lesson-text__content {
+  p {
+    margin: 0 0 10px;
+    line-height: 1.6;
+    opacity: 0.95;
+  }
+
+  ul {
+    margin: 8px 0 12px 18px;
+    display: grid;
+    gap: 8px;
+    opacity: 0.95;
+  }
+
+  strong {
+    color: rgba(255, 255, 255, 0.98);
+    font-weight: 700;
   }
 }

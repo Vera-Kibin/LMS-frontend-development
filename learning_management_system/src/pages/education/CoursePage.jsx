@@ -1,12 +1,10 @@
-import DashboardLayout from "../../components/DashboardLayout.jsx";
-import { useParams } from "react-router-dom";
-import { useState, useMemo } from "react";
-import { initialCourses } from "../../data/courses.jsx";
-import { useAuth } from "../../context/AuthContext.jsx";
+import { useMemo, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import CourseStruktura from "../../components/CourseStruktura.jsx";
-import { reOrder } from "../../utils/reOrder.jsx";
-import { Link } from "react-router-dom";
+import DashboardLayout from "../../components/DashboardLayout.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import { useCourses } from "../../context/CoursesContext.jsx";
+import { reOrder } from "../../utils/reOrder.jsx";
 
 export default function CoursePage() {
   const { courseId } = useParams();
@@ -72,7 +70,12 @@ export default function CoursePage() {
   const kursDoPokazywania = isEdit ? szkic : currentCourse;
 
   return (
-    <DashboardLayout title="Kurs">
+    <DashboardLayout title={currentCourse.title}>
+      <div className="lesson-breadcrumbs">
+        <Link to="/courses">Kursy</Link>
+        <span>›</span>
+        <span className="muted">{currentCourse.title}</span>
+      </div>
       {canEdit && (
         <>
           {!isEdit ? (
@@ -106,7 +109,7 @@ export default function CoursePage() {
         onReorderLessons={handleReorderLessons}
       />
       <Link className="layout_back" to="/courses">
-        KURSY
+        WROC
       </Link>
     </DashboardLayout>
   );
