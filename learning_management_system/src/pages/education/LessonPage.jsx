@@ -5,6 +5,7 @@ import { useCourses } from "../../context/CoursesContext.jsx";
 import QuizEngine from "../../components/QuizEngine.jsx";
 import { quizzesByLessonId } from "../../data/quizzes.jsx";
 import { lessonContentById } from "../../data/lessonContent.jsx";
+import { useProgress } from "../../context/ProgressContext.jsx";
 
 export default function LessonPage() {
   const { courseId, lessonId } = useParams();
@@ -12,6 +13,9 @@ export default function LessonPage() {
   const quiz = quizzesByLessonId[lessonId];
 
   const { courses } = useCourses();
+
+  const { progress, markVideoWatched, markQuizPassed, markLessonCompleted } =
+    useProgress();
 
   const content = lessonContentById[lessonId] ?? {
     videoSrc: null,
@@ -26,8 +30,34 @@ export default function LessonPage() {
   const [currentTime, setCurrentTime] = useState(0);
   const hasVideo = Boolean(videoSrc);
   const hasTranscript = Array.isArray(transcript) && transcript.length > 0;
+  const quizDone = Boolean(progress.quizPassed?.[lessonId]);
+  const videoDone = Boolean(progress.videoWatched?.[lessonId]);
+
+  useEffect(() => {
+    const needVideo = Boolean(videoSrc);
+    const done = quizDone && (!needVideo || videoDone);
+
+    if (done && !progress.completedLessons?.[lessonId]) {
+      markLessonCompleted(lessonId);
+    }
+  }, [
+    quizDone,
+    videoDone,
+    videoSrc,
+    lessonId,
+    progress.completedLessons,
+    markLessonCompleted,
+  ]);
   const hasMedia = hasVideo && hasTranscript;
   const activeLineRef = useRef(null);
+
+  const [duration, setDuration] = useState(0);
+  const [videoMarked, setVideoMarked] = useState(false);
+
+  function onLoadedMetadata() {
+    const d = videoRef.current?.duration ?? 0;
+    setDuration(d);
+  }
 
   const { course, lesson, module } = useMemo(() => {
     const course = courses.find((c) => c.id === courseId);
@@ -69,6 +99,11 @@ export default function LessonPage() {
   function onTimeUpdate() {
     const t = videoRef.current?.currentTime ?? 0;
     setCurrentTime(t);
+
+    if (!videoMarked && duration > 0 && t / duration >= 0.9) {
+      setVideoMarked(true);
+      markVideoWatched(lessonId);
+    }
   }
 
   function seekTo(t) {
@@ -123,6 +158,7 @@ export default function LessonPage() {
                   controls
                   src={videoSrc}
                   onTimeUpdate={onTimeUpdate}
+                  onLoadedMetadata={onLoadedMetadata}
                 />
               </div>
 
@@ -158,7 +194,9 @@ export default function LessonPage() {
         {quiz && (
           <QuizEngine
             quiz={quiz}
-            onPassed={(res) => console.log("QUIZ PASSED:", res)}
+            onPassed={() => {
+              markQuizPassed(lessonId);
+            }}
           />
         )}
 

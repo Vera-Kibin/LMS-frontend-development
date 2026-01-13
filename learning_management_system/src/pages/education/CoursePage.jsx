@@ -5,6 +5,8 @@ import DashboardLayout from "../../components/DashboardLayout.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useCourses } from "../../context/CoursesContext.jsx";
 import { reOrder } from "../../utils/reOrder.jsx";
+import { useProgress } from "../../context/ProgressContext.jsx";
+import { calcCourseProgress } from "../../utils/progress.jsx";
 
 export default function CoursePage() {
   const { courseId } = useParams();
@@ -25,6 +27,12 @@ export default function CoursePage() {
   const [bylaZmiana, setBylaZmiana] = useState(false);
 
   if (!currentCourse) return <p>Nie znaleziono kursu.</p>;
+
+  const { progress } = useProgress();
+  const stats = useMemo(
+    () => calcCourseProgress(currentCourse, progress.completedLessons),
+    [currentCourse, progress.completedLessons]
+  );
 
   function handleEdit() {
     if (!canEdit) return;
@@ -76,6 +84,9 @@ export default function CoursePage() {
         <span>›</span>
         <span className="muted">{currentCourse.title}</span>
       </div>
+      <p className="muted">
+        Postęp: {stats.percent}% ({stats.done}/{stats.total} lekcji)
+      </p>
       {canEdit && (
         <>
           {!isEdit ? (
@@ -108,8 +119,8 @@ export default function CoursePage() {
         onReorderModules={handleReorderModules}
         onReorderLessons={handleReorderLessons}
       />
-      <Link className="layout_back" to="/courses">
-        WROC
+      <Link className="btn-ghost" to="/courses">
+        Wróć do kursów
       </Link>
     </DashboardLayout>
   );

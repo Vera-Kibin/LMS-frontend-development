@@ -5,13 +5,16 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CoursesProvider } from "./context/CoursesContext.jsx";
+import { ProgressProvider } from "./context/ProgressContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <CoursesProvider>
-          <App />
+          <ProgressProvider>
+            <App />
+          </ProgressProvider>
         </CoursesProvider>
       </AuthProvider>
     </BrowserRouter>
