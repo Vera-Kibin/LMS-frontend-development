@@ -78,8 +78,31 @@ export default function CoursesPage() {
 
   return (
     <DashboardLayout title="Kursy">
-      {/* твои кнопки edit/save/анулуй остаются */}
-
+      {canEdit && (
+        <>
+          {!isEdit ? (
+            <button className="layout_back" onClick={handleEdit}>
+              EDYTUJ
+            </button>
+          ) : (
+            <>
+              <button
+                className="layout_back"
+                onClick={handleSave}
+                disabled={!bylaZmiana}
+              >
+                ZAPISZ
+              </button>
+              <button className="layout_back" onClick={handleAnuluj}>
+                ANULUJ
+              </button>
+              {!bylaZmiana && (
+                <p className="hint">* Wprowadź zmianę, aby móc zapisać</p>
+              )}
+            </>
+          )}
+        </>
+      )}
       <SortableList
         items={listaDoPokazywania}
         editable={canEdit && isEdit}

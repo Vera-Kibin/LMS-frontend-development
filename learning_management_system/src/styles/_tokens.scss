@@ -1,0 +1,169 @@
+:root {
+  --bg: #111725;
+  --bg-panel: #111827;
+  --text: #e5e7eb;
+  --link: rgba(255, 255, 255, 0.92);
+  --link-muted: rgba(255, 255, 255, 0.78);
+  --link-hover-bg: rgba(255, 255, 255, 0.06);
+  --link-border: rgba(255, 255, 255, 0.08);
+  --accent-soft: rgba(59, 130, 246, 0.45);
+  --accent: #3b82f6;
+
+  --panel: rgba(255, 255, 255, 0.04);
+  --panel-border: rgba(255, 255, 255, 0.06);
+
+  --surface: rgba(0, 0, 0, 0.16);
+  --surface-border: rgba(255, 255, 255, 0.1);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+
+  --btn-bg: rgba(255, 255, 255, 0.1);
+  --btn-bg-hover: rgba(255, 255, 255, 0.16);
+  --btn-text: var(--link);
+
+  --ghost-text: var(--link);
+  --ghost-border: rgba(255, 255, 255, 0.12);
+  --ghost-hover-bg: rgba(255, 255, 255, 0.06);
+  --ghost-hover-border: rgba(59, 130, 246, 0.25);
+
+  --layout-bg: var(--bg);
+  --layout-surface: rgba(255, 255, 255, 0.04);
+  --layout-surface-strong: rgba(255, 255, 255, 0.06);
+  --shadow-lg: 0 18px 45px rgba(0, 0, 0, 0.3);
+
+  --topbtn-bg: rgba(255, 255, 255, 0.1);
+  --topbtn-bg-hover: rgba(255, 255, 255, 0.16);
+  --topbtn-text: var(--link);
+
+  --border: rgba(255, 255, 255, 0.1);
+  --border-soft: rgba(255, 255, 255, 0.06);
+
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.35);
+
+  --text-muted: rgba(255, 255, 255, 0.7);
+
+  --bar-track: rgba(255, 255, 255, 0.08);
+  --bar-border: rgba(255, 255, 255, 0.1);
+  --bar-fill: rgba(147, 183, 162, 0.75);
+
+  --accent-border: rgba(59, 130, 246, 0.35);
+  --accent-bg: rgba(59, 130, 246, 0.12);
+  --accent-bg-hover: rgba(59, 130, 246, 0.18);
+  --accent-border-hover: rgba(59, 130, 246, 0.55);
+
+  --text-strong: rgba(255, 255, 255, 0.92);
+  --text-soft: rgba(255, 255, 255, 0.55);
+
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  --panel-header: rgba(17, 24, 39, 0.75);
+
+  --border-soft: rgba(255, 255, 255, 0.06);
+
+  --video-bg: rgba(0, 0, 0, 0.25);
+  --fade-strong: rgba(17, 24, 39, 0.95);
+  --fade-none: rgba(17, 24, 39, 0);
+
+  --quiz-opt-bg: var(--surface);
+  --quiz-opt-border: rgba(255, 255, 255, 0.08);
+  --quiz-opt-hover-bg: var(--surface-hover);
+  --quiz-opt-hover-border: rgba(255, 255, 255, 0.14);
+
+  --toast-bg: rgba(59, 130, 246, 0.16);
+  --toast-border: rgba(59, 130, 246, 0.35);
+  --toast-accent: rgba(59, 130, 246, 0.85);
+  --toast-blur: 6px;
+
+  --auth-bg: linear-gradient(135deg, #020617, #111725);
+  --auth-card-bg: rgba(15, 23, 42, 0.96);
+  --auth-card-border: rgba(148, 163, 184, 0.3);
+  --auth-card-shadow: 0 18px 45px rgba(15, 23, 42, 0.8);
+
+  --shadow-card: 0 8px 22px rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] {
+  --bg: #f1f5f9;
+  --bg-panel: #ffffff;
+  --text: #0f172a;
+  --link: rgba(15, 23, 42, 0.92);
+  --link-muted: rgba(15, 23, 42, 0.72);
+  --link-hover-bg: rgba(15, 23, 42, 0.06);
+  --link-border: rgba(15, 23, 42, 0.12);
+  --accent-soft: rgba(59, 130, 246, 0.25);
+  --accent: #2563eb;
+
+  --panel: rgba(17, 19, 26, 0.04);
+  --panel-border: rgba(15, 23, 42, 0.1);
+
+  --surface: rgba(15, 23, 42, 0.06);
+  --surface-border: rgba(15, 23, 42, 0.12);
+  --surface-hover: rgba(15, 23, 42, 0.08);
+
+  --btn-bg: rgba(15, 23, 42, 0.08);
+  --btn-bg-hover: rgba(15, 23, 42, 0.12);
+  --btn-text: var(--link);
+
+  --ghost-text: var(--link);
+  --ghost-border: rgba(15, 23, 42, 0.16);
+  --ghost-hover-bg: rgba(15, 23, 42, 0.06);
+  --ghost-hover-border: rgba(37, 99, 235, 0.3);
+
+  --layout-bg: var(--bg);
+  --layout-surface: rgba(15, 23, 42, 0.04);
+  --layout-surface-strong: rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 18px 45px rgba(2, 6, 23, 0.1);
+
+  --topbtn-bg: rgba(15, 23, 42, 0.08);
+  --topbtn-bg-hover: rgba(15, 23, 42, 0.12);
+  --topbtn-text: var(--link);
+
+  --border: rgba(15, 23, 42, 0.14);
+  --border-soft: rgba(15, 23, 42, 0.1);
+
+  --surface: rgba(15, 23, 42, 0.04);
+  --surface-hover: rgba(15, 23, 42, 0.06);
+
+  --shadow-md: 0 4px 12px rgba(2, 6, 23, 0.1);
+  --shadow-lg: 0 8px 20px rgba(2, 6, 23, 0.14);
+
+  --text-muted: rgba(15, 23, 42, 0.7);
+
+  --bar-track: rgba(15, 23, 42, 0.08);
+  --bar-border: rgba(15, 23, 42, 0.12);
+  --bar-fill: rgba(37, 99, 235, 0.35);
+
+  --text-strong: rgba(15, 23, 42, 0.92);
+  --text-soft: rgba(15, 23, 42, 0.6);
+
+  --surface: rgba(15, 23, 42, 0.04);
+  --surface-hover: rgba(15, 23, 42, 0.06);
+  --panel-header: rgba(255, 255, 255, 0.85);
+
+  --border-soft: rgba(15, 23, 42, 0.1);
+
+  --video-bg: rgba(2, 6, 23, 0.08);
+  --fade-strong: rgba(255, 255, 255, 0.92);
+  --fade-none: rgba(255, 255, 255, 0);
+  --quiz-opt-bg: var(--surface);
+  --quiz-opt-border: var(--border-soft);
+  --quiz-opt-hover-bg: var(--surface-hover);
+  --quiz-opt-hover-border: var(--border);
+  --quiz-opt-border: rgba(15, 23, 42, 0.12);
+  --quiz-opt-hover-border: rgba(15, 23, 42, 0.18);
+
+  --toast-bg: rgba(37, 99, 235, 0.12);
+  --toast-border: rgba(37, 99, 235, 0.28);
+  --toast-accent: rgba(37, 99, 235, 0.75);
+  --toast-blur: 6px;
+
+  --auth-bg: linear-gradient(135deg, #e2e8f0, #f8fafc);
+  --auth-card-bg: rgba(255, 255, 255, 0.95);
+  --auth-card-border: rgba(15, 23, 42, 0.12);
+  --auth-card-shadow: 0 18px 45px rgba(2, 6, 23, 0.08);
+
+  --shadow-card: 0 8px 22px rgba(15, 23, 42, 0.08);
+}

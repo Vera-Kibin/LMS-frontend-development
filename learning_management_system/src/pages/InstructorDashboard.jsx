@@ -1,80 +1,109 @@
-// import DashboardLayout from "../components/DashboardLayout.jsx";
-// import { initialCourses } from "../data/courses.jsx";
-// import { useState } from "react";
-// import CourseStruktura from "../components/CourseStruktura.jsx";
-// import { reOrder } from "../utils/reOrder.jsx";
-
-// export default function InstructorDashboard() {
-//   const [courses, setCourses] = useState(initialCourses);
-//   const currentCourse = courses[0];
-
-//   const [szkic, setSzkic] = useState(null);
-//   const [isEdit, setIsEdit] = useState(false);
-//   const [bylaZmiana, setBylaZmiana] = useState(false);
-
-//   function handleEdit() {
-//     setSzkic(structuredClone(currentCourse));
-//     setIsEdit(true);
-//     setBylaZmiana(false);
-//   }
-//   function handleSave() {
-//     setCourses((p) => p.map((c) => (c.id === szkic.id ? szkic : c)));
-//     setSzkic(null);
-//     setIsEdit(false);
-//     setBylaZmiana(false);
-//   }
-//   function handleAnuluj() {
-//     setSzkic(null);
-//     setIsEdit(false);
-//     setBylaZmiana(false);
-//   }
-//   function handleReorderModules(fromId, toId) {
-//     if (!isEdit) return;
-//     setSzkic((i) => ({ ...i, modules: reOrder(i.modules, fromId, toId) }));
-//     setBylaZmiana(true);
-//   }
-
-//   return (
-//     <DashboardLayout title="Panel instruktora">
-//       {!isEdit ? (
-//         <button className="layout_back" onClick={handleEdit}>
-//           EDYTUJ
-//         </button>
-//       ) : (
-//         <>
-//           <button
-//             className="layout_back"
-//             onClick={handleSave}
-//             disabled={!bylaZmiana}
-//           >
-//             ZAPISZ
-//           </button>
-//           <button className="layout_back" onClick={handleAnuluj}>
-//             ANULUJ
-//           </button>
-//           {!bylaZmiana && (
-//             <p className="hint">* Wprowadź zmianę, aby móc zapisać</p>
-//           )}
-//         </>
-//       )}
-//       <CourseStruktura
-//         course={isEdit ? szkic : currentCourse}
-//         editable={isEdit}
-//         onReorderModules={handleReorderModules}
-//       />
-//     </DashboardLayout>
-//   );
-// }
 import DashboardLayout from "../components/DashboardLayout.jsx";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
+import { useProgress } from "../context/ProgressContext.jsx";
+import { calcXP, calcLevelFromXP, BADGES } from "../utils/gamification.jsx";
+import { useQuoteOfTheDay } from "../hooks/useQuoteOfTheDay.jsx";
+
+function QuoteWidget() {
+  const { data, isLoading, isError, refetch, isFetching } = useQuoteOfTheDay();
+
+  if (isLoading) return <p className="muted">Ładowanie cytatu…</p>;
+
+  if (isError) {
+    return (
+      <div className="dash-quote">
+        <p className="muted">Nie udało się pobrać cytatu.</p>
+        <button className="btn-ghost" onClick={() => refetch()}>
+          Spróbuj ponownie
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="dash-quote">
+      <p className="dash-quote__text">“{data.text}”</p>
+      <p className="muted">— {data.author}</p>
+
+      <button className="btn-ghost" onClick={() => refetch()}>
+        {isFetching ? "Odświeżanie…" : "Odśwież"}
+      </button>
+    </div>
+  );
+}
 
 export default function InstructorDashboard() {
+  const { uzytkownik } = useAuth();
+  const { progress } = useProgress();
+
+  const name = uzytkownik?.name || "Instruktor";
+
+  const xp = calcXP(progress);
+  const lvl = calcLevelFromXP(xp);
+  const needed = Math.max(0, lvl.nextMin - xp);
+  const earnedBadges = BADGES.filter((b) => b.check(progress));
+
   return (
-    <DashboardLayout title="Panel instruktora">
-      <p>Wybierz kurs do edycji:</p>
-      <Link className="layout_back" to="/courses">
-        KURSY
-      </Link>
-    </DashboardLayout>
+    <DashboardLayout
+      title="Panel instruktora"
+      topContent={
+        <div className="dash-grid">
+          <section className="dash-card">
+            <h2>Witaj, {name}!</h2>
+            <p className="muted">Rola: {uzytkownik?.role}</p>
+          </section>
+
+          <section className="dash-card">
+            <h3>Poziom {lvl.level}</h3>
+            <p className="muted">
+              XP: {xp} • Do następnego: {needed} XP
+            </p>
+            <div
+              className="levelbar"
+              role="progressbar"
+              aria-valuenow={lvl.percent}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
+              <div
+                className="levelbar__fill"
+                style={{ width: `${lvl.percent}%` }}
+              />
+            </div>
+          </section>
+
+          <section className="dash-card">
+            <h3>Odznaki</h3>
+            {earnedBadges.length === 0 ? (
+              <p className="muted">Brak odznak jeszcze.</p>
+            ) : (
+              <ul className="dash-badges">
+                {earnedBadges.map((b) => (
+                  <li key={b.id}>{b.title}</li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <section className="dash-card">
+            <h3>Cytat dnia</h3>
+            <QuoteWidget />
+          </section>
+
+          <section className="dash-card">
+            <h3>Szybkie akcje</h3>
+            <div className="dash-actions">
+              <Link className="dash-action" to="/courses">
+                Kursy
+              </Link>
+              <Link className="dash-action" to="/forum">
+                Forum
+              </Link>
+            </div>
+          </section>
+        </div>
+      }
+    />
   );
 }

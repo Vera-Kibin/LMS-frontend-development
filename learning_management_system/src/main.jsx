@@ -6,17 +6,36 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CoursesProvider } from "./context/CoursesContext.jsx";
 import { ProgressProvider } from "./context/ProgressContext.jsx";
+import { GamificationProvider } from "./context/GamificationContext.jsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ForumProvider } from "./context/ForumContext.jsx";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <CoursesProvider>
-          <ProgressProvider>
-            <App />
-          </ProgressProvider>
-        </CoursesProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    {" "}
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AuthProvider>
+          <CoursesProvider>
+            <ProgressProvider>
+              <GamificationProvider>
+                <ForumProvider>
+                  <App />
+                </ForumProvider>
+              </GamificationProvider>
+            </ProgressProvider>
+          </CoursesProvider>
+        </AuthProvider>
+      </BrowserRouter>{" "}
+    </QueryClientProvider>
   </StrictMode>
 );

@@ -1,19 +1,41 @@
-import { createContext, useContext, useMemo, useState } from "react";
-
-// progress = {
-//   completedLessons: { [lessonId]: true },
-//   videoWatched: { [lessonId]: true },
-//   quizPassed: { [lessonId]: true },
-// }
+import { createContext, useContext, useMemo, useState, useEffect } from "react";
+import { useAuth } from "./AuthContext.jsx";
 
 const ProgressContext = createContext(null);
 
+const EMPTY = {
+  completedLessons: {},
+  videoWatched: {},
+  quizPassed: {},
+};
+
+function safeParse(json, fallback) {
+  try {
+    return JSON.parse(json) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 export function ProgressProvider({ children }) {
-  const [progress, setProgress] = useState(() => ({
-    completedLessons: {},
-    videoWatched: {},
-    quizPassed: {},
-  }));
+  const { uzytkownik } = useAuth();
+  const userKey = uzytkownik?.id || "guest";
+  const storageKey = `progress:${userKey}`;
+
+  const [progress, setProgress] = useState(EMPTY);
+
+  useEffect(() => {
+    const raw = localStorage.getItem(storageKey);
+    if (!raw) {
+      setProgress(EMPTY);
+      return;
+    }
+    setProgress(safeParse(raw, EMPTY));
+  }, [storageKey]);
+
+  useEffect(() => {
+    localStorage.setItem(storageKey, JSON.stringify(progress));
+  }, [storageKey, progress]);
 
   function markVideoWatched(lessonId) {
     setProgress((p) => ({
@@ -42,8 +64,9 @@ export function ProgressProvider({ children }) {
       markVideoWatched,
       markQuizPassed,
       markLessonCompleted,
+      userKey,
     }),
-    [progress]
+    [progress, userKey]
   );
 
   return (

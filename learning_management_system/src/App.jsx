@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import CoursesPage from "./pages/education/CoursesPage.jsx";
 import CoursePage from "./pages/education/CoursePage.jsx";
 import LessonPage from "./pages/education/LessonPage.jsx";
+import ForumPage from "./pages/ForumPage.jsx";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/forum" element={<ForumPage />} />
 
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>

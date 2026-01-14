@@ -1,0 +1,79 @@
+.quiz__card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.quiz__answers {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.quiz__opt {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 12px;
+  border-radius: 12px;
+  background: var(--quiz-opt-bg);
+  border: 1px solid var(--quiz-opt-border);
+  cursor: pointer;
+  transition: transform 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.quiz__opt input {
+  transform: scale(1.1);
+}
+
+.quiz__actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.lesson-text__content {
+  p {
+    margin: 0 0 10px;
+    line-height: 1.6;
+    opacity: 0.95;
+  }
+
+  ul {
+    margin: 8px 0 12px 18px;
+    display: grid;
+    gap: 8px;
+    opacity: 0.95;
+  }
+
+  strong {
+    color: var(--text-strong);
+    font-weight: 700;
+  }
+}
+@media (hover: hover) {
+  .quiz__opt:hover {
+    transform: translateY(-1px);
+    background: var(--quiz-opt-hover-bg);
+    border-color: var(--quiz-opt-hover-border);
+  }
+}
+@media (max-width: 520px) {
+  .quiz__opt {
+    align-items: flex-start;
+  }
+
+  .quiz__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quiz__actions .btn,
+  .quiz__actions .btn-ghost {
+    width: 100%;
+    justify-content: center;
+  }
+}

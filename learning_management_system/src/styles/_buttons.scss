@@ -1,0 +1,62 @@
+.btn {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 0;
+  cursor: pointer;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.btn:hover {
+  background: var(--btn-bg-hover);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+
+  color: var(--ghost-text);
+  border: 1px solid var(--ghost-border);
+  background: transparent;
+
+  transition: transform 0.12s ease, background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.btn-ghost:hover {
+  background: var(--ghost-hover-bg);
+  border-color: var(--ghost-hover-border);
+  transform: translateY(-1px);
+}
+@media (hover: hover) {
+  .btn:not(:disabled):hover {
+    background: var(--btn-bg-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost:not(.is-disabled):hover {
+    background: var(--ghost-hover-bg);
+    border-color: var(--ghost-hover-border);
+    transform: translateY(-1px);
+  }
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-ghost.is-disabled,
+.btn-ghost[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
