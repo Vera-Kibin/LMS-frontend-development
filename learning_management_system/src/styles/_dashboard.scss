@@ -76,15 +76,13 @@
   min-height: 100%;
 }
 
-/* TOP */
 .home__top {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 18px;
-  align-items: stretch; /* ważne: cytat ma dorównać wysokością */
+  align-items: stretch;
 }
 
-/* HERO jako „banner + overlay” */
 .home__hero {
   position: relative;
   overflow: hidden;
@@ -95,7 +93,6 @@
   box-shadow: var(--shadow-md);
 }
 
-/* duże zdjęcie kota */
 .home__heroCover {
   height: 180px;
   background: var(--surface);
@@ -112,7 +109,6 @@
   transform: scale(1.02);
 }
 
-/* gradient żeby tekst był czytelny */
 .home__heroCover::after {
   content: "";
   position: absolute;
@@ -124,21 +120,18 @@
   );
 }
 
-/* blok z tekstem pod bannerem */
 .home__heroBody {
   padding: 16px;
   display: grid;
   gap: 14px;
 }
 
-/* tytuł */
 .home__title {
   margin: 0;
   font-size: 1.7rem;
   line-height: 1.15;
 }
 
-/* mini-karty (poziom + odznaki) */
 .home__mini {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -153,7 +146,6 @@
   min-height: 120px;
 }
 
-/* QUOTE */
 .home__quote {
   background: var(--panel);
   border: 1px solid var(--panel-border);
@@ -164,7 +156,6 @@
   gap: 10px;
 }
 
-/* ładniejsza typografia cytatu */
 .dash-quote__text {
   margin: 0;
   line-height: 1.6;
@@ -187,7 +178,6 @@
   opacity: 0.75;
 }
 
-/* BOTTOM akcje */
 .home__bottom {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -264,7 +254,6 @@
   cursor: default;
 }
 
-/* hover tylko tam gdzie hover ma sens */
 @media (hover: hover) {
   .home__actionCard:hover {
     transform: translateY(-1px);
@@ -287,7 +276,6 @@
   }
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
   .home__top {
     grid-template-columns: 1fr;
@@ -323,10 +311,8 @@
   height: 100%;
   object-fit: cover;
 
-  /* najczęściej ratuje kadr (przesuń w górę/dół wg zdjęcia) */
   object-position: center 35%;
 
-  /* „obróbka” bez PS */
   filter: saturate(1.03) contrast(1.04);
   transform: scale(1.02);
 }
@@ -405,5 +391,46 @@
         transparent 60%
       ),
       rgba(255, 255, 255, 0.05);
+  }
+}
+
+.mini-tile {
+  flex: 1;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.03);
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.mini-tile__title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.mini-tile__desc {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+@media (hover: hover) {
+  .mini-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
   }
 }

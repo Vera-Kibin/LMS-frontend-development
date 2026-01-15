@@ -9,8 +9,6 @@ export default function CourseStruktura({
 }) {
   return (
     <div className="course-outline">
-      {/* <h2>{course.title}</h2> */}
-
       <SortableList
         items={course.modules}
         editable={editable}

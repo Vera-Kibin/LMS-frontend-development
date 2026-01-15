@@ -23,8 +23,8 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     {" "}
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
+      <AuthProvider>
+        <BrowserRouter>
           <CoursesProvider>
             <ProgressProvider>
               <GamificationProvider>
@@ -34,8 +34,8 @@ createRoot(document.getElementById("root")).render(
               </GamificationProvider>
             </ProgressProvider>
           </CoursesProvider>
-        </AuthProvider>
-      </BrowserRouter>{" "}
+        </BrowserRouter>{" "}
+      </AuthProvider>
     </QueryClientProvider>
   </StrictMode>
 );

@@ -1,0 +1,98 @@
+.grid-tools {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.grid-search,
+.grid-select {
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(2, 6, 23, 0.45);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0 12px;
+  outline: none;
+}
+
+.grid-wrap {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.grid-table thead th {
+  text-align: left;
+  padding: 12px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.grid-table tbody td {
+  padding: 12px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.grid-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.th-btn {
+  background: none;
+  border: 0;
+  color: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+.num {
+  text-align: right;
+}
+
+.strong {
+  font-weight: 700;
+}
+
+.pill {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+.pill--student {
+  opacity: 0.95;
+}
+.pill--instructor {
+  opacity: 0.95;
+}
+.pill--admin {
+  opacity: 0.95;
+}
+
+.grid-pager {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 700px) {
+  .grid-tools {
+    grid-template-columns: 1fr;
+  }
+  .grid-wrap {
+    overflow: auto;
+  }
+}

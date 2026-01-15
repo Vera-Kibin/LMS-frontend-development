@@ -36,8 +36,10 @@ function QuoteWidget() {
 export default function StudentDashboard() {
   const { uzytkownik } = useAuth();
   const { progress } = useProgress();
-
-  const name = uzytkownik?.name || "Student";
+  const displayName =
+    (uzytkownik?.name && uzytkownik.name.trim()) ||
+    (uzytkownik?.id && String(uzytkownik.id).split(":")[1]) ||
+    "Student";
   const xp = calcXP(progress);
   const lvl = calcLevelFromXP(xp);
   const needed = Math.max(0, lvl.nextMin - xp);
@@ -52,12 +54,12 @@ export default function StudentDashboard() {
             <div className="home__left">
               <section className="home__hero">
                 <div className="home__heroMedia" aria-hidden="true">
-                  <img src="/avatars/cat-student.png" alt="" />
+                  <img src="/videos/stars.gif" alt="" className="hero-gif" />
                 </div>
 
                 <div className="home__heroBody">
                   <div className="home__heroText">
-                    <h2 className="home__title">Witaj, {name}!</h2>
+                    <h2 className="home__title">Witaj, {displayName}!</h2>
                     <p className="muted">Rola: {uzytkownik?.role}</p>
                   </div>
 

@@ -3,15 +3,23 @@ import { createContext, useContext, useMemo, useState } from "react";
 const AuthContext = createContext(null);
 
 function makeUser(role, name) {
+  const safeRole = (role || "").toString();
   const safeName = (name || "").trim();
-  const id = safeName ? `${role}:${safeName}` : role;
-  return { id, role, name: safeName || null };
+  const id = safeName ? `${safeRole}:${safeName}` : safeRole;
+  return { id, role: safeRole, name: safeName || null };
 }
 
 export function AuthProvider({ children }) {
   const [uzytkownik, setUzytkownik] = useState(null);
 
-  function zalogowanie(role, name) {
+  function zalogowanie(payloadOrRole, maybeName) {
+    if (typeof payloadOrRole === "string") {
+      setUzytkownik(makeUser(payloadOrRole, maybeName));
+      return;
+    }
+
+    const role = payloadOrRole?.role;
+    const name = payloadOrRole?.name;
     setUzytkownik(makeUser(role, name));
   }
   function wylogowanie() {

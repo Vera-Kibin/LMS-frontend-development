@@ -1,21 +1,3 @@
-// import DashboardLayout from "../../components/DashboardLayout.jsx";
-// import { initialCourses } from "../../data/courses.jsx";
-// import { Link } from "react-router-dom";
-
-// export default function CoursesPage() {
-//   return (
-//     <DashboardLayout title="Kursy">
-//       <div className="courses-grid">
-//         {initialCourses.map((c) => (
-//           <Link key={c.id} to={`/courses/${c.id}`} className="course-card">
-//             <h3 className="course-card__title">{c.title}</h3>
-//             <p>{c.modules.length} modułów</p>
-//           </Link>
-//         ))}
-//       </div>
-//     </DashboardLayout>
-//   );
-// }
 import DashboardLayout from "../../components/DashboardLayout.jsx";
 import SortableList from "../../components/SortableList.jsx";
 import { Link } from "react-router-dom";
@@ -37,9 +19,31 @@ export default function CoursesPage() {
   const [szkic, setSzkic] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [bylaZmiana, setBylaZmiana] = useState(false);
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState("az");
+  const effectiveSort = isEdit ? "none" : sort;
+  function highlight(text, q) {
+    const safeText = String(text ?? "");
+    const query = (q || "").trim();
+    if (!query) return safeText;
+
+    const idx = safeText.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return safeText;
+
+    const before = safeText.slice(0, idx);
+    const match = safeText.slice(idx, idx + query.length);
+    const after = safeText.slice(idx + query.length);
+
+    return (
+      <>
+        {before}
+        <mark className="hl">{match}</mark>
+        {after}
+      </>
+    );
+  }
 
   const listaDoPokazywania = isEdit ? szkic : courses;
-
   const statsByCourseId = useMemo(() => {
     const completed = progress.completedLessons ?? {};
     const map = {};
@@ -48,6 +52,31 @@ export default function CoursesPage() {
     }
     return map;
   }, [courses, progress.completedLessons]);
+
+  const filteredSorted = useMemo(() => {
+    const q = query.trim().toLowerCase();
+
+    const base = (listaDoPokazywania || []).filter((c) => {
+      if (!q) return true;
+      return (c.title || "").toLowerCase().includes(q);
+    });
+
+    const copy = [...base];
+
+    if (effectiveSort === "az") {
+      copy.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+    } else if (effectiveSort === "za") {
+      copy.sort((a, b) => (b.title || "").localeCompare(a.title || ""));
+    } else if (effectiveSort === "progress") {
+      copy.sort((a, b) => {
+        const pa = statsByCourseId[a.id]?.percent ?? 0;
+        const pb = statsByCourseId[b.id]?.percent ?? 0;
+        return pb - pa;
+      });
+    }
+
+    return copy;
+  }, [listaDoPokazywania, query, effectiveSort, statsByCourseId]);
 
   function handleEdit() {
     if (!canEdit) return;
@@ -78,33 +107,65 @@ export default function CoursesPage() {
 
   return (
     <DashboardLayout title="Kursy">
-      {canEdit && (
-        <>
-          {!isEdit ? (
-            <button className="layout_back" onClick={handleEdit}>
+      <div className="courses-tools">
+        <div className="courses-tools__left">
+          <input
+            className="courses-search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Szukaj kursu…"
+            aria-label="Szukaj kursu"
+          />
+        </div>
+
+        <div className="courses-tools__right">
+          <select
+            className="courses-sort"
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            disabled={isEdit}
+            aria-label="Sortowanie"
+          >
+            <option value="az">A–Z</option>
+            <option value="za">Z–A</option>
+            <option value="progress">Postęp</option>
+          </select>
+
+          <div className="courses-count muted">
+            Znaleziono: {filteredSorted.length}
+          </div>
+
+          {canEdit && !isEdit && (
+            <button className="courses-btn" onClick={handleEdit}>
               EDYTUJ
             </button>
-          ) : (
+          )}
+
+          {canEdit && isEdit && (
             <>
               <button
-                className="layout_back"
+                className="courses-btn"
                 onClick={handleSave}
                 disabled={!bylaZmiana}
               >
                 ZAPISZ
               </button>
-              <button className="layout_back" onClick={handleAnuluj}>
+              <button
+                className="courses-btn courses-btn--ghost"
+                onClick={handleAnuluj}
+              >
                 ANULUJ
               </button>
-              {!bylaZmiana && (
-                <p className="hint">* Wprowadź zmianę, aby móc zapisać</p>
-              )}
             </>
           )}
-        </>
+        </div>
+      </div>
+
+      {canEdit && isEdit && !bylaZmiana && (
+        <p className="hint">* Wprowadź zmianę, aby móc zapisać</p>
       )}
       <SortableList
-        items={listaDoPokazywania}
+        items={filteredSorted}
         editable={canEdit && isEdit}
         onReorder={handleReorderCourses}
         className="courses-grid"
@@ -116,7 +177,9 @@ export default function CoursesPage() {
             <>
               <div className="course-card__top">
                 <div>
-                  <h3 className="course-card__title">{c.title}</h3>
+                  <h3 className="course-card__title">
+                    {highlight(c.title, query)}
+                  </h3>{" "}
                   <p className="muted">{c.modules.length} modułów</p>
                 </div>
 
