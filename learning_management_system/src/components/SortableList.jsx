@@ -15,6 +15,7 @@ export default function SortableList({
     if (!editable) return;
     setDragged(elId);
     e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", String(elId));
   }
 
   function handleDragOver(e, elId) {

@@ -1,37 +1,38 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useMemo, useState } from "react";
 
-function validateName(raw) {
-  const v = (raw ?? "").trim();
-
-  if (!v) return "Imię jest wymagane.";
-  if (v.length < 2) return "Imię jest za krótkie (min. 2 znaki).";
-  if (v.length > 20) return "Imię jest za długie (max. 20 znaków).";
-  if (!/^[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż\- ]+$/.test(v)) {
-    return "Użyj tylko liter, spacji lub myślnika ( A-z , - , ? ).";
-  }
+function validateEmail(raw) {
+  const v = (raw ?? "").trim().toLowerCase();
+  if (!v) return "Email jest wymagany.";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return "Niepoprawny email.";
   return "";
 }
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const { zalogowanie } = useAuth();
-  const [name, setName] = useState("");
-  const [touched, setTouched] = useState(false);
 
-  const cleanName = useMemo(() => name.trim(), [name]);
-  const error = useMemo(() => validateName(name), [name]);
-  const showError = (touched || name.length > 0) && !!error;
+  const [email, setEmail] = useState("");
+  const [touched, setTouched] = useState(false);
+  const [apiError, setApiError] = useState("");
+
+  const error = useMemo(() => validateEmail(email), [email]);
   const canLogin = !error;
 
-  function wybor(role) {
-    if (!canLogin) {
-      setTouched(true);
+  function onSubmit(e) {
+    e.preventDefault();
+    setTouched(true);
+    setApiError("");
+    if (!canLogin) return;
+
+    const res = zalogowanie({ email });
+    if (!res.ok) {
+      setApiError(res.error);
       return;
     }
 
-    zalogowanie(role, cleanName);
-
+    const role = res.user.role;
     if (role === "student") navigate("/student");
     if (role === "instructor") navigate("/instructor");
     if (role === "admin") navigate("/admin");
@@ -52,60 +53,35 @@ export default function LoginPage() {
       <div className="auth__box">
         <h1 className="auth__logo">LOGOWANIE</h1>
 
-        <label className="auth__field">
-          <input
-            type="text"
-            placeholder="TWOJE IMIĘ"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onBlur={() => setTouched(true)}
-            autoComplete="name"
-            aria-invalid={showError}
-            aria-describedby="name-error"
-          />
-        </label>
+        <form onSubmit={onSubmit}>
+          <label className="auth__field">
+            <input
+              type="email"
+              placeholder="TWÓJ EMAIL"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setTouched(true)}
+              autoComplete="email"
+              aria-invalid={(touched || email.length > 0) && !!error}
+            />
+          </label>
 
-        {showError ? (
-          <p className="auth__warn" id="name-error">
-            {error}
-          </p>
-        ) : (
-          <p className="auth__hint">
-            {canLogin ? "Wybierz rolę" : "Wpisz imię, aby kontynuować."}
-          </p>
-        )}
+          {(touched || email.length > 0) && error ? (
+            <p className="auth__warn">{error}</p>
+          ) : apiError ? (
+            <p className="auth__warn">{apiError}</p>
+          ) : (
+            <p className="auth__hint">Wpisz email i zaloguj się.</p>
+          )}
 
-        <div className="auth__buttons">
-          <button
-            type="button"
-            className="role-btn"
-            data-role="student"
-            disabled={!canLogin}
-            onClick={() => wybor("student")}
-          >
-            STUDENT
+          <button className="role-btn" type="submit" disabled={!canLogin}>
+            ZALOGUJ
           </button>
+        </form>
 
-          <button
-            type="button"
-            className="role-btn"
-            data-role="instructor"
-            disabled={!canLogin}
-            onClick={() => wybor("instructor")}
-          >
-            INSTRUKTOR
-          </button>
-
-          <button
-            type="button"
-            className="role-btn"
-            data-role="admin"
-            disabled={!canLogin}
-            onClick={() => wybor("admin")}
-          >
-            ADMIN
-          </button>
-        </div>
+        <p className="auth__hint" style={{ marginTop: 12 }}>
+          Nie masz konta? <Link to="/register">Zarejestruj się</Link>
+        </p>
       </div>
     </main>
   );

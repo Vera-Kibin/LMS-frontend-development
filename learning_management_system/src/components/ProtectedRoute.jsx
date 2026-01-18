@@ -2,7 +2,9 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function ProtectedRoute({ allowedRoles, children }) {
-  const { uzytkownik } = useAuth();
+  const { uzytkownik, loading } = useAuth();
+
+  if (loading) return null;
 
   if (!uzytkownik) {
     return <Navigate to="/login" replace />;

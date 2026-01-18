@@ -9,10 +9,12 @@ import CoursePage from "./pages/education/CoursePage.jsx";
 import LessonPage from "./pages/education/LessonPage.jsx";
 import ForumPage from "./pages/ForumPage.jsx";
 import AdminGridPage from "./pages/AdminGridPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
 
 function App() {
   return (
     <Routes>
+      <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
 
       <Route

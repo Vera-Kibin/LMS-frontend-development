@@ -1,41 +1,102 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { db } from "../lib/storage.js";
 
 const AuthContext = createContext(null);
 
-function makeUser(role, name) {
-  const safeRole = (role || "").toString();
-  const safeName = (name || "").trim();
-  const id = safeName ? `${safeRole}:${safeName}` : safeRole;
-  return { id, role: safeRole, name: safeName || null };
+function normalizeRole(role) {
+  const r = String(role ?? "")
+    .trim()
+    .toLowerCase();
+  if (r === "student" || r === "instructor" || r === "admin") return r;
+  return "student";
+}
+
+function makeUser({ name, email, role }) {
+  const safeName = String(name ?? "").trim();
+  const safeEmail = String(email ?? "")
+    .trim()
+    .toLowerCase();
+
+  return {
+    id: safeEmail,
+    name: safeName,
+    email: safeEmail,
+    role: normalizeRole(role),
+    createdAt: Date.now(),
+  };
 }
 
 export function AuthProvider({ children }) {
   const [uzytkownik, setUzytkownik] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  function zalogowanie(payloadOrRole, maybeName) {
-    if (typeof payloadOrRole === "string") {
-      setUzytkownik(makeUser(payloadOrRole, maybeName));
+  useEffect(() => {
+    const session = db.getSession();
+    if (!session?.userId) {
+      setUzytkownik(null);
+      setLoading(false);
       return;
     }
 
-    const role = payloadOrRole?.role;
-    const name = payloadOrRole?.name;
-    setUzytkownik(makeUser(role, name));
+    const user = db.getUsers().find((u) => u.id === session.userId) || null;
+    setUzytkownik(user);
+    setLoading(false);
+  }, []);
+
+  function rejestracja({ name, email, role }) {
+    const users = db.getUsers();
+    const user = makeUser({ name, email, role });
+
+    if (!user.email) {
+      return { ok: false, error: "Email jest wymagany." };
+    }
+    if (!user.name) {
+      return { ok: false, error: "Imię jest wymagane." };
+    }
+
+    if (users.some((u) => u.id === user.id)) {
+      return { ok: false, error: "Użytkownik o takim email już istnieje." };
+    }
+
+    db.setUsers([user, ...users]);
+    db.setSession({ userId: user.id });
+    setUzytkownik(user);
+    return { ok: true, user };
   }
+
+  function zalogowanie({ email }) {
+    const safeEmail = String(email ?? "")
+      .trim()
+      .toLowerCase();
+    const user = db.getUsers().find((u) => u.email === safeEmail);
+
+    if (!user) {
+      return {
+        ok: false,
+        error: "Nie znaleziono użytkownika. Zarejestruj się.",
+      };
+    }
+
+    db.setSession({ userId: user.id });
+    setUzytkownik(user);
+    return { ok: true, user };
+  }
+
   function wylogowanie() {
+    db.clearSession();
     setUzytkownik(null);
   }
-  const dane = useMemo(
-    () => ({ uzytkownik, zalogowanie, wylogowanie }),
-    [uzytkownik]
+
+  const value = useMemo(
+    () => ({ uzytkownik, loading, rejestracja, zalogowanie, wylogowanie }),
+    [uzytkownik, loading]
   );
-  return <AuthContext.Provider value={dane}>{children}</AuthContext.Provider>;
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
-  const wynik = useContext(AuthContext);
-  if (!wynik) {
-    throw new Error("useAuth must be used inside AuthProvider");
-  }
-  return wynik;
+  const v = useContext(AuthContext);
+  if (!v) throw new Error("useAuth must be used inside AuthProvider");
+  return v;
 }

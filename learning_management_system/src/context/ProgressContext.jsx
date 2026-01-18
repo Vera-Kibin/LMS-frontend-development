@@ -1,5 +1,6 @@
-import { createContext, useContext, useMemo, useState, useEffect } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useAuth } from "./AuthContext.jsx";
+import { db } from "../lib/storage.js";
 
 const ProgressContext = createContext(null);
 
@@ -9,33 +10,26 @@ const EMPTY = {
   quizPassed: {},
 };
 
-function safeParse(json, fallback) {
-  try {
-    return JSON.parse(json) ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-
 export function ProgressProvider({ children }) {
-  const { uzytkownik } = useAuth();
-  const userKey = uzytkownik?.id || "guest";
-  const storageKey = `progress:${userKey}`;
+  const { uzytkownik, loading } = useAuth();
+  const userId = uzytkownik?.id;
 
   const [progress, setProgress] = useState(EMPTY);
 
   useEffect(() => {
-    const raw = localStorage.getItem(storageKey);
-    if (!raw) {
+    if (loading) return;
+    if (!userId) {
       setProgress(EMPTY);
       return;
     }
-    setProgress(safeParse(raw, EMPTY));
-  }, [storageKey]);
+    setProgress(db.getProgress(userId));
+  }, [loading, userId]);
 
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(progress));
-  }, [storageKey, progress]);
+    if (loading) return;
+    if (!userId) return;
+    db.setProgress(userId, progress);
+  }, [loading, userId, progress]);
 
   function markVideoWatched(lessonId) {
     setProgress((p) => ({
@@ -58,15 +52,19 @@ export function ProgressProvider({ children }) {
     }));
   }
 
+  function resetProgress() {
+    setProgress(EMPTY);
+  }
+
   const value = useMemo(
     () => ({
       progress,
       markVideoWatched,
       markQuizPassed,
       markLessonCompleted,
-      userKey,
+      resetProgress,
     }),
-    [progress, userKey]
+    [progress]
   );
 
   return (
@@ -77,8 +75,7 @@ export function ProgressProvider({ children }) {
 }
 
 export function useProgress() {
-  const wynik = useContext(ProgressContext);
-  if (!wynik)
-    throw new Error("useProgress must be used inside ProgressProvider");
-  return wynik;
+  const v = useContext(ProgressContext);
+  if (!v) throw new Error("useProgress must be used inside ProgressProvider");
+  return v;
 }

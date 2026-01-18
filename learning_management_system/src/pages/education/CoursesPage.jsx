@@ -20,7 +20,7 @@ export default function CoursesPage() {
   const [isEdit, setIsEdit] = useState(false);
   const [bylaZmiana, setBylaZmiana] = useState(false);
   const [query, setQuery] = useState("");
-  const [sort, setSort] = useState("az");
+  const [sort, setSort] = useState("manual");
   const effectiveSort = isEdit ? "none" : sort;
   function highlight(text, q) {
     const safeText = String(text ?? "");
@@ -88,6 +88,7 @@ export default function CoursesPage() {
   function handleSave() {
     if (!canEdit || !szkic) return;
     setCourses(szkic);
+    setSort("manual");
     setSzkic(null);
     setIsEdit(false);
     setBylaZmiana(false);
@@ -126,6 +127,7 @@ export default function CoursesPage() {
             disabled={isEdit}
             aria-label="Sortowanie"
           >
+            <option value="manual">Ręcznie</option>
             <option value="az">A–Z</option>
             <option value="za">Z–A</option>
             <option value="progress">Postęp</option>
