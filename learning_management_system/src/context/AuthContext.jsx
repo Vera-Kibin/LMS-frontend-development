@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { db } from "../lib/storage.js";
+import { db, uid } from "../lib/storage.js";
 
 const AuthContext = createContext(null);
 
@@ -18,7 +18,7 @@ function makeUser({ name, email, role }) {
     .toLowerCase();
 
   return {
-    id: safeEmail,
+    id: uid("user"),
     name: safeName,
     email: safeEmail,
     role: normalizeRole(role),
@@ -54,7 +54,7 @@ export function AuthProvider({ children }) {
       return { ok: false, error: "Imię jest wymagane." };
     }
 
-    if (users.some((u) => u.id === user.id)) {
+    if (users.some((u) => u.email === user.email)) {
       return { ok: false, error: "Użytkownik o takim email już istnieje." };
     }
 

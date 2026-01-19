@@ -50,6 +50,13 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
         <button type="button" className="btn-ghost" onClick={addLink}>
           Link
         </button>
+        <button
+          type="button"
+          className="btn-ghost"
+          onClick={() => cmd("removeFormat")}
+        >
+          Tx
+        </button>
       </div>
 
       <div

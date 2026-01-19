@@ -14,7 +14,7 @@ export default function ForumPage() {
       id: uzytkownik?.id || "guest",
       name: uzytkownik?.name || (uzytkownik?.role ?? "Gość"),
     }),
-    [uzytkownik]
+    [uzytkownik],
   );
 
   const [activeId, setActiveId] = useState(threads[0]?.id || null);
@@ -25,37 +25,16 @@ export default function ForumPage() {
 
   return (
     <DashboardLayout title="Forum">
+      <section className="forum__rules">
+        <h2>Forum</h2>
+        <p className="muted">
+          Tutaj możesz zadawać pytania i dyskutować. Prosimy: szanuj innych, nie
+          publikuj treści zabronionych i nie udostępniaj danych wrażliwych.
+        </p>
+      </section>
       <div className="forum">
-        <aside className="forum__sidebar">
+        <aside className="forum__left">
           <h3>Wątki</h3>
-
-          <div className="forum__new">
-            <input
-              className="input"
-              value={title}
-              placeholder="Tytuł wątku…"
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <RichTextEditor
-              value={html}
-              onChange={setHtml}
-              placeholder="Treść pierwszego posta…"
-            />
-            <button
-              className="btn"
-              type="button"
-              onClick={() => {
-                if (!title.trim()) return;
-                if (!html.trim()) return;
-
-                createThread({ title, author, content: { html } });
-                setTitle("");
-                setHtml("");
-              }}
-            >
-              Dodaj wątek
-            </button>
-          </div>
 
           <div className="forum__list">
             {threads.map((t) => (
@@ -74,7 +53,7 @@ export default function ForumPage() {
           </div>
         </aside>
 
-        <main className="forum__main">
+        <main className="forum__center">
           {!active ? (
             <p className="muted">Brak wątków.</p>
           ) : (
@@ -106,6 +85,42 @@ export default function ForumPage() {
             </>
           )}
         </main>
+
+        <aside className="forum__right">
+          <h3>Nowy wątek</h3>
+
+          <div className="forum__new">
+            <input
+              className="input"
+              value={title}
+              placeholder="Tytuł wątku…"
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <RichTextEditor
+              value={html}
+              onChange={setHtml}
+              placeholder="Treść pierwszego posta…"
+            />
+            <button
+              className="btn"
+              type="button"
+              onClick={() => {
+                if (!title.trim()) return;
+                if (!html.trim()) return;
+
+                const id = createThread({ title, author, content: { html } });
+
+                // ważne UX: po dodaniu od razu otwórz wątek
+                if (id) setActiveId(id);
+
+                setTitle("");
+                setHtml("");
+              }}
+            >
+              Dodaj wątek
+            </button>
+          </div>
+        </aside>
       </div>
     </DashboardLayout>
   );

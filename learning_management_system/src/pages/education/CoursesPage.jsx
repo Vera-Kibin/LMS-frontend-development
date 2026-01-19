@@ -7,6 +7,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import { useState, useMemo } from "react";
 import { useProgress } from "../../context/ProgressContext.jsx";
 import { calcCourseProgress } from "../../utils/progress.jsx";
+import { uid } from "../../lib/storage.js";
 
 export default function CoursesPage() {
   const { courses, setCourses } = useCourses();
@@ -19,9 +20,14 @@ export default function CoursesPage() {
   const [szkic, setSzkic] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [bylaZmiana, setBylaZmiana] = useState(false);
+
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("manual");
   const effectiveSort = isEdit ? "none" : sort;
+
+  const [isCreating, setIsCreating] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
+
   function highlight(text, q) {
     const safeText = String(text ?? "");
     const query = (q || "").trim();
@@ -44,6 +50,7 @@ export default function CoursesPage() {
   }
 
   const listaDoPokazywania = isEdit ? szkic : courses;
+
   const statsByCourseId = useMemo(() => {
     const completed = progress.completedLessons ?? {};
     const map = {};
@@ -83,6 +90,8 @@ export default function CoursesPage() {
     setSzkic(structuredClone(courses));
     setIsEdit(true);
     setBylaZmiana(false);
+    setIsCreating(false);
+    setNewTitle("");
   }
 
   function handleSave() {
@@ -104,6 +113,70 @@ export default function CoursesPage() {
     if (!canEdit || !isEdit) return;
     setSzkic((prev) => reOrder(prev, fromId, toId));
     setBylaZmiana(true);
+  }
+
+  function startCreate() {
+    if (!canEdit) return;
+    setIsCreating(true);
+    setNewTitle("");
+  }
+
+  function cancelCreate() {
+    setIsCreating(false);
+    setNewTitle("");
+  }
+
+  function createCourse() {
+    if (!canEdit) return;
+
+    const title = newTitle.trim();
+    if (!title) return;
+
+    const authorName =
+      (uzytkownik?.name && uzytkownik.name.trim()) ||
+      (uzytkownik?.email ? uzytkownik.email : "Nieznany");
+
+    const newCourse = {
+      id: uid("course"),
+      title,
+      level: "beginner",
+      category: "General",
+      modules: [],
+      authorId: uzytkownik?.id ?? null,
+      authorName,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+
+    if (isEdit && szkic) {
+      setSzkic((prev) => [newCourse, ...(prev || [])]);
+      setBylaZmiana(true);
+    } else {
+      setCourses((prev) => [newCourse, ...(prev || [])]);
+      setSort("manual");
+    }
+
+    setIsCreating(false);
+    setNewTitle("");
+  }
+
+  function deleteCourse(courseId) {
+    if (!canEdit) return;
+    const ok = confirm("Usunąć kurs? Tej operacji nie da się cofnąć.");
+    if (!ok) return;
+
+    if (isEdit && szkic) {
+      setSzkic((prev) => (prev || []).filter((c) => c.id !== courseId));
+      setBylaZmiana(true);
+    } else {
+      setCourses((prev) => (prev || []).filter((c) => c.id !== courseId));
+      setSort("manual");
+    }
+  }
+
+  function displayAuthor(course) {
+    if (!course?.authorName && !course?.authorId) return "Platforma";
+    return course.authorName || "Platforma";
   }
 
   return (
@@ -137,10 +210,41 @@ export default function CoursesPage() {
             Znaleziono: {filteredSorted.length}
           </div>
 
-          {canEdit && !isEdit && (
-            <button className="courses-btn" onClick={handleEdit}>
-              EDYTUJ
-            </button>
+          {canEdit && !isEdit && !isCreating && (
+            <>
+              <button className="courses-btn" onClick={startCreate}>
+                + NOWY KURS
+              </button>
+              <button className="courses-btn" onClick={handleEdit}>
+                EDYTUJ
+              </button>
+            </>
+          )}
+
+          {canEdit && !isEdit && isCreating && (
+            <>
+              <input
+                className="courses-search"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                placeholder="Nazwa nowego kursu…"
+                aria-label="Nazwa nowego kursu"
+                autoFocus
+              />
+              <button
+                className="courses-btn"
+                onClick={createCourse}
+                disabled={!newTitle.trim()}
+              >
+                UTWÓRZ
+              </button>
+              <button
+                className="courses-btn courses-btn--ghost"
+                onClick={cancelCreate}
+              >
+                ANULUJ
+              </button>
+            </>
           )}
 
           {canEdit && isEdit && (
@@ -166,6 +270,7 @@ export default function CoursesPage() {
       {canEdit && isEdit && !bylaZmiana && (
         <p className="hint">* Wprowadź zmianę, aby móc zapisać</p>
       )}
+
       <SortableList
         items={filteredSorted}
         editable={canEdit && isEdit}
@@ -181,13 +286,27 @@ export default function CoursesPage() {
                 <div>
                   <h3 className="course-card__title">
                     {highlight(c.title, query)}
-                  </h3>{" "}
+                  </h3>
                   <p className="muted">{c.modules.length} modułów</p>
+                  <p className="muted">Autor: {displayAuthor(c)}</p>
                 </div>
 
-                <Link to={`/courses/${c.id}`} className="course-card__action">
-                  Przeglądaj
-                </Link>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <Link to={`/courses/${c.id}`} className="course-card__action">
+                    Przeglądaj
+                  </Link>
+
+                  {canEdit && (
+                    <button
+                      type="button"
+                      className="course-card__action"
+                      onClick={() => deleteCourse(c.id)}
+                      title="Usuń kurs"
+                    >
+                      Usuń
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="course-progress">

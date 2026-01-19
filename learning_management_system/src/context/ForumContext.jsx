@@ -1,73 +1,122 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { forumSeed } from "../data/forumSeed.jsx";
+import { db, uid } from "../lib/storage.js";
 
 const ForumContext = createContext(null);
 
-function safeParse(raw, fallback) {
-  try {
-    const v = JSON.parse(raw);
-    return v ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function uid(prefix = "id") {
-  return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now()}`;
-}
-
 export function ForumProvider({ children }) {
-  const storageKey = "forum:threads";
-  const [threads, setThreads] = useState(() => {
-    const raw = localStorage.getItem(storageKey);
-    return raw ? safeParse(raw, forumSeed) : forumSeed;
-  });
+  const [threads, setThreads] = useState(() => db.getThreads(forumSeed));
+
+  const ensuredLessonRef = useRef({ lessonId: null, threadId: null });
 
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(threads));
+    db.setThreads(threads);
   }, [threads]);
 
-  function createThread({ title, author, content }) {
+  function createThread({
+    title,
+    author,
+    content,
+    meta = null,
+    withFirstPost = true,
+  }) {
     const safeHtml = content?.html?.trim() ? content.html : "<p></p>";
+    const threadId = uid("t");
 
     const thread = {
-      id: uid("t"),
+      id: threadId,
       title: title.trim() || "Bez tytułu",
       createdAt: Date.now(),
       author,
-      comments: [
-        {
-          id: uid("c"),
-          parentId: null,
-          author,
-          createdAt: Date.now(),
-          content: { html: safeHtml },
-        },
-      ],
+      meta,
+      comments: withFirstPost
+        ? [
+            {
+              id: uid("c"),
+              parentId: null,
+              author,
+              createdAt: Date.now(),
+              content: { html: safeHtml },
+            },
+          ]
+        : [],
     };
 
     setThreads((prev) => [thread, ...prev]);
+    return threadId;
   }
 
   function addComment({ threadId, parentId = null, author, content }) {
+    const safeHtml = content?.html?.trim() ? content.html : "<p></p>";
+
     setThreads((prev) =>
       prev.map((t) => {
         if (t.id !== threadId) return t;
-        const next = {
-          id: uid("c"),
-          parentId,
-          author,
-          createdAt: Date.now(),
-          content,
+
+        return {
+          ...t,
+          comments: [
+            ...t.comments,
+            {
+              id: uid("c"),
+              parentId,
+              author,
+              createdAt: Date.now(),
+              content: { html: safeHtml },
+            },
+          ],
         };
-        return { ...t, comments: [...t.comments, next] };
-      })
+      }),
     );
   }
 
+  function ensureLessonThread({ lessonId, lessonTitle, author }) {
+    if (ensuredLessonRef.current.lessonId === lessonId) {
+      return ensuredLessonRef.current.threadId;
+    }
+
+    const newId = uid("t");
+    ensuredLessonRef.current = { lessonId, threadId: newId };
+
+    setThreads((prev) => {
+      const existing = prev.find(
+        (t) => t?.meta?.kind === "lesson" && t?.meta?.lessonId === lessonId,
+      );
+      if (existing) {
+        ensuredLessonRef.current = { lessonId, threadId: existing.id };
+        return prev;
+      }
+
+      const thread = {
+        id: newId,
+        title: `[Lekcja] ${lessonTitle}`,
+        createdAt: Date.now(),
+        author,
+        meta: { kind: "lesson", lessonId },
+        comments: [],
+      };
+
+      return [thread, ...prev];
+    });
+
+    return ensuredLessonRef.current.threadId;
+  }
+
   const value = useMemo(
-    () => ({ threads, createThread, addComment }),
-    [threads]
+    () => ({
+      threads,
+      createThread,
+      addComment,
+      ensureLessonThread,
+    }),
+    [threads],
   );
 
   return (
