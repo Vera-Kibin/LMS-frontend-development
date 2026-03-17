@@ -93,10 +93,7 @@ The registration screen introduces role-based access and client-side validation 
 
 Students can browse available courses, open structured lessons, watch video materials, and follow their learning progress within the platform.
 
-<video width="100%" controls>
-  <source src="https://github.com/user-attachments/assets/864578e4-b9b5-4aec-9abd-de3642f459c5" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<video src="https://github.com/user-attachments/assets/864578e4-b9b5-4aec-9abd-de3642f459c5"  width="900" controls muted playsinline></video>
 
 ### Instructor Experience
 
@@ -104,26 +101,17 @@ Instructors can monitor learning activity through analytics and manage course st
 
 #### Instructor Analytics Dashboard
 
-<video width="100%" controls>
-  <source src="https://github.com/user-attachments/assets/b9bdba4e-9f61-4694-8a4b-00e019b697db" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<video src="https://github.com/user-attachments/assets/b9bdba4e-9f61-4694-8a4b-00e019b697db"  width="900" controls muted playsinline></video>
 
 #### Course Editor with Drag-and-Drop
 
-<video width="100%" controls>
-  <source src="https://github.com/user-attachments/assets/d91ddcd1-6cfd-4249-97c0-30d62f15aba5" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<video src="https://github.com/user-attachments/assets/d91ddcd1-6cfd-4249-97c0-30d62f15aba5"  width="900" controls muted playsinline></video>
 
 ### Admin Experience
 
 Admins can manage users through a dedicated grid with filtering and role-aware controls.
 
-<video width="100%" controls>
-  <source src="https://github.com/user-attachments/assets/379c67f6-a039-4f10-aa8d-9d1fdaeae67f" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<video src="https://github.com/user-attachments/assets/379c67f6-a039-4f10-aa8d-9d1fdaeae67f"  width="900" controls muted playsinline></video>
 
 ### Forum & Discussion
 
