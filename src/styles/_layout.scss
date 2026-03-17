@@ -123,7 +123,9 @@
   display: grid;
   place-items: center;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
 }
 
 .logout-btn img {
@@ -150,8 +152,9 @@
   box-shadow: none;
   border-radius: 0;
 
-  font-family: "Press Start 2P", ui-monospace, SFMono-Regular, Menlo, Monaco,
-    Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family:
+    "Press Start 2P", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
   font-size: 30px;
   line-height: 1;
 

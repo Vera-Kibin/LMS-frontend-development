@@ -33,6 +33,31 @@ export const db = {
   setUsers(users) {
     localStorage.setItem(KEYS.USERS, JSON.stringify(users));
   },
+  deleteUser(userId) {
+    const session = db.getSession();
+    const deletedCurrentUser = session?.userId === userId;
+
+    const users = db.getUsers().filter((u) => u.id !== userId);
+    db.setUsers(users);
+
+    const allProgress = db.getAllProgress();
+    if (userId in allProgress) {
+      delete allProgress[userId];
+      db.setAllProgress(allProgress);
+    }
+
+    const allBadges = db.getAllBadges();
+    if (userId in allBadges) {
+      delete allBadges[userId];
+      db.setAllBadges(allBadges);
+    }
+
+    if (deletedCurrentUser) {
+      db.clearSession();
+    }
+
+    return { deletedCurrentUser };
+  },
 
   // SESSION
   getSession() {
@@ -70,11 +95,20 @@ export const db = {
   },
 
   // BADGES
-  getBadges(fallback = {}) {
-    return safeParse(localStorage.getItem(KEYS.BADGES), fallback);
+  getAllBadges() {
+    return safeParse(localStorage.getItem(KEYS.BADGES), {});
   },
-  setBadges(badges) {
-    localStorage.setItem(KEYS.BADGES, JSON.stringify(badges));
+  setAllBadges(map) {
+    localStorage.setItem(KEYS.BADGES, JSON.stringify(map));
+  },
+  getBadges(userId, fallback = {}) {
+    const all = db.getAllBadges();
+    return all[userId] ?? fallback;
+  },
+  setBadges(userId, badges) {
+    const all = db.getAllBadges();
+    all[userId] = badges;
+    db.setAllBadges(all);
   },
 
   // FORUM

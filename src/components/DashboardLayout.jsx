@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+// import ToastHost from "./ToastHost.jsx";
 
 export default function DashboardLayout({ title, topContent, children }) {
   const navigate = useNavigate();
@@ -10,8 +11,8 @@ export default function DashboardLayout({ title, topContent, children }) {
     role === "admin"
       ? "/admin"
       : role === "instructor"
-      ? "/instructor"
-      : "/student";
+        ? "/instructor"
+        : "/student";
 
   function wroc() {
     wylogowanie();
@@ -26,6 +27,7 @@ export default function DashboardLayout({ title, topContent, children }) {
 
   return (
     <main className="layout">
+      {/* <ToastHost /> */}
       <header className="layout_header">
         <Link
           className="layout_brand"

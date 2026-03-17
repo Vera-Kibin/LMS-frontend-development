@@ -87,7 +87,22 @@
   align-items: center;
   flex-wrap: wrap;
 }
+.btn-danger {
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  border-radius: 10px;
+  background: rgba(244, 63, 94, 0.12);
+  color: #ff8ea1;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
 
+.btn-danger:hover {
+  background: rgba(244, 63, 94, 0.18);
+  border-color: rgba(244, 63, 94, 0.5);
+}
 @media (max-width: 700px) {
   .grid-tools {
     grid-template-columns: 1fr;

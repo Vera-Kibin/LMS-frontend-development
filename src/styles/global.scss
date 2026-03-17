@@ -51,9 +51,11 @@
   color: rgba(255, 255, 255, 0.86);
 }
 .auth__warn {
-  margin: 0;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.86);
+  margin: -2px 0 6px;
+  padding-left: 4px;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: #ff7a90;
 }
 .auth__box {
   width: min(520px, 100%);
@@ -70,7 +72,8 @@
 
 .auth__field {
   display: grid;
-  gap: 8px;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
 .auth__field span {
@@ -94,9 +97,10 @@
 }
 
 .auth__hint {
-  margin: 2px 0 0;
+  margin-top: 12px;
+  margin-bottom: 4px;
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.64);
 }
 
 .auth__buttons {
@@ -114,7 +118,10 @@
   font-weight: 700;
   letter-spacing: 0.3px;
   cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease;
 }
 
 .role-btn[data-role="student"] {

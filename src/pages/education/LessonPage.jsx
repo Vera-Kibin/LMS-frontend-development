@@ -85,7 +85,6 @@ export default function LessonPage() {
   const quizDone = Boolean(progress.quizPassed?.[lessonId]);
   const videoDone = Boolean(progress.videoWatched?.[lessonId]);
 
-  // completion
   useEffect(() => {
     const needVideo = Boolean(videoSrc);
     const needQuiz = Boolean(quiz);
@@ -104,7 +103,6 @@ export default function LessonPage() {
     markLessonCompleted,
   ]);
 
-  // transcript highlight
   const activeLineRef = useRef(null);
   const activeIndex = useMemo(() => {
     let idx = 0;
@@ -144,7 +142,6 @@ export default function LessonPage() {
     if (p && typeof p.catch === "function") p.catch(() => {});
   }
 
-  // DISCUSSION
   const [threadId, setThreadId] = useState(null);
 
   useEffect(() => {
@@ -155,8 +152,6 @@ export default function LessonPage() {
       author,
     });
     setThreadId(id);
-    // celowo TYLKO lessonId i title — unikamy re-trigger przez author / funkcję
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lessonId, lesson?.title]);
 
   const thread = useMemo(

@@ -20,7 +20,7 @@ export default function CoursePage() {
 
   const currentCourse = useMemo(
     () => courses.find((c) => c.id === courseId),
-    [courses, courseId]
+    [courses, courseId],
   );
 
   const [szkic, setSzkic] = useState(null);
@@ -32,7 +32,7 @@ export default function CoursePage() {
   const { progress } = useProgress();
   const stats = useMemo(
     () => calcCourseProgress(currentCourse, progress.completedLessons),
-    [currentCourse, progress.completedLessons]
+    [currentCourse, progress.completedLessons],
   );
 
   function handleEdit() {
@@ -69,7 +69,7 @@ export default function CoursePage() {
       modules: draft.modules.map((m) =>
         m.id !== moduleId
           ? m
-          : { ...m, lessons: reOrder(m.lessons, fromId, toId) }
+          : { ...m, lessons: reOrder(m.lessons, fromId, toId) },
       ),
     }));
 
@@ -126,7 +126,7 @@ export default function CoursePage() {
     setSzkic((d) => ({
       ...d,
       modules: d.modules.map((m) =>
-        m.id !== moduleId ? m : { ...m, lessons: [...m.lessons, newLesson] }
+        m.id !== moduleId ? m : { ...m, lessons: [...m.lessons, newLesson] },
       ),
     }));
     setBylaZmiana(true);
@@ -143,7 +143,7 @@ export default function CoursePage() {
       modules: d.modules.map((m) =>
         m.id !== moduleId
           ? m
-          : { ...m, lessons: m.lessons.filter((l) => l.id !== lessonId) }
+          : { ...m, lessons: m.lessons.filter((l) => l.id !== lessonId) },
       ),
     }));
     setBylaZmiana(true);
@@ -160,9 +160,9 @@ export default function CoursePage() {
           : {
               ...m,
               lessons: m.lessons.map((l) =>
-                l.id === lessonId ? { ...l, title } : l
+                l.id === lessonId ? { ...l, title } : l,
               ),
-            }
+            },
       ),
     }));
     setBylaZmiana(true);
@@ -179,9 +179,9 @@ export default function CoursePage() {
           : {
               ...m,
               lessons: m.lessons.map((l) =>
-                l.id === lessonId ? { ...l, ...patch } : l
+                l.id === lessonId ? { ...l, ...patch } : l,
               ),
-            }
+            },
       ),
     }));
     setBylaZmiana(true);
@@ -215,34 +215,44 @@ export default function CoursePage() {
         Postęp: {stats.percent}% ({stats.done}/{stats.total} lekcji)
       </p>
       {canEdit && (
-        <>
+        <div className="course-actions">
           {!isEdit ? (
-            <button className="layout_back" onClick={handleEdit}>
+            <button
+              className="layout_back layout_back--primary"
+              onClick={handleEdit}
+            >
               EDYTUJ
             </button>
           ) : (
             <>
               <button
-                className="layout_back"
+                className="layout_back layout_back--save"
                 onClick={handleSave}
                 disabled={!bylaZmiana}
               >
                 ZAPISZ
               </button>
-              <button className="layout_back" onClick={handleAnuluj}>
+
+              <button
+                className="layout_back layout_back--cancel"
+                onClick={handleAnuluj}
+              >
                 ANULUJ
               </button>
-              {!bylaZmiana && (
-                <p className="hint">* Wprowadź zmianę, aby móc zapisać</p>
-              )}
-              {canEdit && isEdit && (
-                <button className="layout_back" onClick={addModule}>
-                  + MODUŁ
-                </button>
-              )}
+
+              <button
+                className="layout_back layout_back--module"
+                onClick={addModule}
+              >
+                + MODUŁ
+              </button>
             </>
           )}
-        </>
+        </div>
+      )}
+
+      {canEdit && isEdit && !bylaZmiana && (
+        <p className="hint">* Wprowadź zmianę, aby móc zapisać</p>
       )}
 
       <CourseStruktura

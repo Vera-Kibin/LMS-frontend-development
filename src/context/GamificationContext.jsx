@@ -1,26 +1,48 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useProgress } from "./ProgressContext.jsx";
+import { useAuth } from "./AuthContext.jsx";
 import { BADGES, calcLevelFromXP, calcXP } from "../utils/gamification.jsx";
+import { db } from "../lib/storage.js";
 
 const GamificationContext = createContext(null);
 
+function seedBadgesMap(saved = {}) {
+  const next = { ...saved };
+  for (const b of BADGES) {
+    if (typeof next[b.id] !== "boolean") next[b.id] = false;
+  }
+  return next;
+}
+
 export function GamificationProvider({ children }) {
   const { progress } = useProgress();
+  const { uzytkownik } = useAuth();
+  const userId = uzytkownik?.id ?? null;
 
-  const [badges, setBadges] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("badges") || "{}");
-    } catch {
-      return {};
-    }
-  });
-
+  const [badges, setBadges] = useState({});
   const [toasts, setToasts] = useState([]);
 
   const xp = useMemo(() => calcXP(progress), [progress]);
   const levelInfo = useMemo(() => calcLevelFromXP(xp), [xp]);
 
   useEffect(() => {
+    if (!userId) {
+      setBadges({});
+      setToasts([]);
+      return;
+    }
+
+    const saved = db.getBadges(userId, {});
+    const seeded = seedBadgesMap(saved);
+
+    db.setBadges(userId, seeded);
+    setBadges(seeded);
+    setToasts([]);
+  }, [userId]);
+
+  useEffect(() => {
+    if (!userId) return;
+
     const newlyUnlocked = [];
 
     for (const b of BADGES) {
@@ -34,18 +56,18 @@ export function GamificationProvider({ children }) {
     setBadges((prev) => {
       const next = { ...prev };
       for (const b of newlyUnlocked) next[b.id] = true;
-      localStorage.setItem("badges", JSON.stringify(next));
+      db.setBadges(userId, next);
       return next;
     });
 
     setToasts((prev) => [
       ...prev,
       ...newlyUnlocked.map((b) => ({
-        id: `${b.id}-${Date.now()}`,
+        id: `${b.id}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
         text: `Odznaka zdobyta: ${b.title}`,
       })),
     ]);
-  }, [progress, badges]);
+  }, [progress, badges, userId]);
 
   useEffect(() => {
     if (toasts.length === 0) return;
@@ -55,7 +77,7 @@ export function GamificationProvider({ children }) {
 
   const value = useMemo(
     () => ({ xp, levelInfo, badges, toasts }),
-    [xp, levelInfo, badges, toasts]
+    [xp, levelInfo, badges, toasts],
   );
 
   return (

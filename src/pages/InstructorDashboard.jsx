@@ -95,6 +95,10 @@ export default function InstructorDashboard() {
                         <Link className="badge" to="/forum">
                           Moderuj forum
                         </Link>
+
+                        <Link className="badge" to="/instructor/analytics">
+                          Zobacz statystyki
+                        </Link>
                       </div>
                     </div>
                   </div>

@@ -10,7 +10,9 @@
   border-radius: 14px;
   padding: 16px;
   box-shadow: var(--shadow-card);
-  transition: transform 0.12s ease, box-shadow 0.12s ease,
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
     border-color 0.12s ease;
 }
 .dash-card:hover {
@@ -32,7 +34,9 @@
   border-radius: 10px;
   border: 1px solid var(--link-border);
   background: var(--surface);
-  transition: transform 0.12s ease, background 0.12s ease,
+  transition:
+    transform 0.12s ease,
+    background 0.12s ease,
     border-color 0.12s ease;
 }
 .dash-action:hover {
@@ -202,7 +206,9 @@
   align-content: start;
 
   min-height: 110px;
-  transition: transform 0.12s ease, box-shadow 0.12s ease,
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
     border-color 0.12s ease;
 }
 .home__actionCard::before {
@@ -212,7 +218,7 @@
   bottom: 12px;
   width: 72px;
   height: 72px;
-  opacity: 0.16;
+  opacity: 0.06;
 
   background-repeat: no-repeat;
   background-size: contain;
@@ -233,14 +239,36 @@
 }
 
 @media (hover: hover) {
-  .home__actionCard:hover .home__actionIcon {
-    border-color: rgba(59, 130, 246, 0.35);
-    background: radial-gradient(
-        70% 70% at 30% 30%,
-        rgba(59, 130, 246, 0.32),
-        transparent 60%
+  .home__actionCard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(96, 165, 250, 0.35);
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.03),
+        rgba(255, 255, 255, 0.01)
       ),
-      rgba(255, 255, 255, 0.05);
+      var(--panel);
+  }
+
+  .home__actionCard:hover::before {
+    opacity: 0.82;
+    transform: scale(1.04);
+    filter: saturate(1.35) contrast(1.12) brightness(1.18)
+      drop-shadow(0 0 10px rgba(59, 130, 246, 0.18));
+  }
+
+  .home__actionCard.is-soon:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
+    border-color: var(--panel-border);
+  }
+
+  .home__actionCard.is-soon:hover::before {
+    opacity: 0.24;
+    transform: none;
+    filter: saturate(1.05) contrast(1.05) brightness(1);
   }
 }
 
@@ -267,7 +295,8 @@
   }
   .home__actionCard:hover .home__actionIcon {
     border-color: rgba(59, 130, 246, 0.35);
-    background: radial-gradient(
+    background:
+      radial-gradient(
         70% 70% at 30% 30%,
         rgba(59, 130, 246, 0.32),
         transparent 60%
@@ -353,7 +382,8 @@
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
 
-  background: radial-gradient(
+  background:
+    radial-gradient(
       80% 140% at 20% 10%,
       rgba(59, 130, 246, 0.18),
       transparent 60%
@@ -385,7 +415,8 @@
 @media (hover: hover) {
   .badge:hover {
     border-color: rgba(59, 130, 246, 0.28);
-    background: radial-gradient(
+    background:
+      radial-gradient(
         80% 140% at 20% 10%,
         rgba(59, 130, 246, 0.26),
         transparent 60%
@@ -413,7 +444,9 @@
   border: 1px solid var(--border-soft);
   background: rgba(255, 255, 255, 0.03);
 
-  transition: transform 0.15s ease, box-shadow 0.15s ease,
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
     border-color 0.15s ease;
 }
 
@@ -432,5 +465,164 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
     border-color: var(--accent);
+  }
+}
+
+//
+
+.analytics-page {
+  display: grid;
+  gap: 22px;
+}
+
+.analytics-page__head h2 {
+  margin: 0 0 8px;
+}
+
+.analytics-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.analytics-summary__card {
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+}
+
+.analytics-summary__card h3 {
+  margin: 0 0 10px;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.analytics-summary__card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.analytics-summary__card--blue {
+  background: linear-gradient(
+    180deg,
+    rgba(59, 109, 214, 0.22),
+    rgba(43, 87, 183, 0.12)
+  );
+}
+
+.analytics-summary__card--violet {
+  background: linear-gradient(
+    180deg,
+    rgba(75, 79, 157, 0.24),
+    rgba(54, 58, 127, 0.12)
+  );
+}
+
+.analytics-summary__card--gold {
+  background: linear-gradient(
+    180deg,
+    rgba(242, 208, 107, 0.22),
+    rgba(216, 178, 78, 0.12)
+  );
+}
+
+.analytics-summary__card--blueSoft {
+  background: linear-gradient(
+    180deg,
+    rgba(90, 130, 220, 0.18),
+    rgba(59, 109, 214, 0.08)
+  );
+}
+
+.analytics-insights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.analytics-note {
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.analytics-note h4 {
+  margin: 0 0 10px;
+}
+
+.analytics-grid--page {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.analytics-panel {
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.analytics-panel__head {
+  margin-bottom: 12px;
+}
+
+.analytics-panel__head h4 {
+  margin: 0 0 6px;
+}
+
+.chart-box {
+  width: 100%;
+  height: 260px;
+}
+
+.analytics-tableWrap {
+  overflow-x: auto;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.analytics-table th,
+.analytics-table td {
+  text-align: left;
+  padding: 14px 16px;
+}
+
+.analytics-table thead th {
+  color: rgba(255, 255, 255, 0.82);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.analytics-table tbody td {
+  color: rgba(255, 255, 255, 0.72);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.analytics-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+@media (max-width: 1100px) {
+  .analytics-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .analytics-insights,
+  .analytics-grid--page {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .analytics-summary {
+    grid-template-columns: 1fr;
   }
 }
